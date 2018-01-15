@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import LoginForm
 from django.contrib.auth import authenticate, login as login_django
+from django.contrib.auth import logout as logout_django
 
 # Create your views here.
 
@@ -35,5 +36,10 @@ def dashboard(request):
 
     }
     return render(request, 'dashboard.html', context)
+
+
+def logout(request):
+    logout_django(request)
+    return redirect('client:login')
 
 
