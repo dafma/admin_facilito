@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+
 
 from django.shortcuts import render, redirect
-from django.views.generic import View
+from django.views.generic import View, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginForm, CreateUSerForm
@@ -9,10 +9,15 @@ from django.contrib.auth import authenticate, login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
 # Create your views here.
+from django.contrib.auth.models import User
+
+class ShowView(DetailView):
+    model = User
+    template_name = 'show.html'
+    slug_field = 'username' # que campo de la base de datos
+    slug_url_kwarg = 'username_url' # que de la url
 
 
-def show(request):
-    return HttpResponse("Hola desde el cliente")
 
 class LoginView(View):
     form = LoginForm()
