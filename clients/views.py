@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 
 from django.shortcuts import render, redirect
-from django.views import View
+from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginForm, CreateUSerForm
 from django.contrib.auth import authenticate, login as login_django
@@ -36,6 +37,12 @@ class LoginView(View):
 
     def get_context(self):
         return {'form': self.form, 'message':self.message}
+
+class DashboardView(LoginRequiredMixin, View):
+    login_url = 'client:login'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'dashboard.html', {})
 
 def login(request):
 
