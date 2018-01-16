@@ -13,8 +13,9 @@ def show(request):
 
 
 def login(request):
-    if request.user.is_authentificated():
-        return redirect('client:dashboard')
+
+    #if request.user.is_authentificated():
+        #return redirect('client:dashboard')
     message = None
 
     if request.method == 'POST':
@@ -46,7 +47,13 @@ def logout(request):
     return redirect('client:login')
 
 def create(request):
-    form = CreateUSerForm()
+    form = CreateUSerForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save(commit = False)
+            user.set_password(user.password)
+            user.save()
+            return redirect('client:login')
     context = {
         'form':form
     }
