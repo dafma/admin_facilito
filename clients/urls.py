@@ -8,6 +8,6 @@ urlpatterns = [
     url(r'^login/', views.LoginView.as_view(), name= 'login'),
     url(r'^logout/', views.logout, name= 'logout'),
     url(r'^dashboard/', views.DashboardView.as_view(), name='dashboard'),
-    url(r'^create/', views.create, name='create'),
+    url(r'^create/', views.CreateUserr.as_view(), name='create'),
 
 ]

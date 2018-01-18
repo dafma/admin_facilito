@@ -1,7 +1,7 @@
-
-
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.views.generic import View, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import View, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginForm, CreateUSerForm
@@ -82,6 +82,18 @@ def dashboard(request):
 def logout(request):
     logout_django(request)
     return redirect('client:login')
+
+class CreateUserr(CreateView):
+    success_url = reverse_lazy('client:login')
+    template_name = 'create.html'
+    model = User
+    form_class = CreateUSerForm
+
+    def form_valid(self, form):
+        self.object = form.save(commit = False)
+        self.object.set_password(self.object.password)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 def create(request):
     form = CreateUSerForm(request.POST or None)
