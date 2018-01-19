@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import LoginForm, CreateUSerForm, EditUserForm, EditPasswordForm
+from .forms import LoginUserForm, CreateUSerForm, EditUserForm, EditPasswordForm
 from django.contrib.auth import authenticate, login as login_django, update_session_auth_hash
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
@@ -28,10 +28,8 @@ class EditView(UpdateView):
         return self.request.user
 
 
-
-
 class LoginView(View):
-    form = LoginForm()
+    form = LoginUserForm()
     message = None
     template = 'login.html'
 
@@ -59,6 +57,47 @@ class DashboardView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         return render(request, 'dashboard.html', {})
+
+class CreateUserr(CreateView):
+    success_url = reverse_lazy('client:login')
+    template_name = 'create.html'
+    model = User
+    form_class = CreateUSerForm
+
+    def form_valid(self, form):
+        self.object = form.save(commit = False)
+        self.object.set_password(self.object.password)
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+def create(request):
+    form = CreateUSerForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save(commit = False)
+            user.set_password(user.password)
+            user.save()
+            return redirect('client:login')
+    context = {
+        'form':form
+    }
+    return render(request, 'create.html', context)
+
+def edit_password(request):
+    message = None
+    form = EditPasswordForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            current_password = form.cleaned_data['password']
+            new_password = form.cleaned_data['new_password']
+            if authenticate(username = request.user.username, password = current_password):
+                request.user.set_password(new_password)
+                request.user.save()
+                update_session_auth_hash(request, request.user)
+                message = "password actualizado"
+
+    context = {'form': form, 'message':message}
+    return render(request, 'edit_password.html', context)
 
 def login(request):
 
@@ -93,48 +132,5 @@ def dashboard(request):
 def logout(request):
     logout_django(request)
     return redirect('client:login')
-
-class CreateUserr(CreateView):
-    success_url = reverse_lazy('client:login')
-    template_name = 'create.html'
-    model = User
-    form_class = CreateUSerForm
-
-    def form_valid(self, form):
-        self.object = form.save(commit = False)
-        self.object.set_password(self.object.password)
-        self.object.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-def create(request):
-    form = CreateUSerForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            user = form.save(commit = False)
-            user.set_password(user.password)
-            user.save()
-            return redirect('client:login')
-    context = {
-        'form':form
-    }
-    return render(request, 'create.html', context)
-
-
-
-def edit_password(request):
-    message = None
-    form = EditPasswordForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            current_password = form.cleaned_data['password']
-            new_password = form.cleaned_data['new_password']
-            if authenticate(username = request.user.username, password = current_password):
-                request.user.set_password(new_password)
-                request.user.save()
-                update_session_auth_hash(request, request.user)
-                message = "password actualizado"
-
-    context = {'form': form, 'message':message}
-    return render(request, 'edit_password.html', context)
 
 

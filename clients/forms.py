@@ -17,7 +17,7 @@ ERROR_MESSAGE_USER =  {'required': 'El username es requerido',
 ERROR_MESSAGE_PASSWORD = {'required': 'El password es requerido'}
 ERROR_MESSAGE_EMAIL = {'required': 'El email es requerido', 'invalid': 'ingrese un correo valido'}
 
-class LoginForm(forms.Form):
+class LoginUserForm(forms.Form):
     username = forms.CharField(max_length=20)
     password = forms.CharField(max_length=20, widget= forms.PasswordInput())
 
