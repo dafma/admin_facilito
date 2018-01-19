@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^logout/', views.logout, name= 'logout'),
     url(r'^dashboard/', views.DashboardView.as_view(), name='dashboard'),
     url(r'^create/', views.CreateUserr.as_view(), name='create'),
+    url(r'^edit/', views.EditView.as_view(), name='edit'),
 
 ]

@@ -1,10 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import View, DetailView, CreateView
+from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import LoginForm, CreateUSerForm
+from .forms import LoginForm, CreateUSerForm, EditUserForm
 from django.contrib.auth import authenticate, login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,17 @@ class ShowView(DetailView):
     template_name = 'show.html'
     slug_field = 'username' # que campo de la base de datos
     slug_url_kwarg = 'username_url' # que de la url
+
+
+class EditView(UpdateView):
+    model = User
+    template_name = 'edit.html'
+    success_url = reverse_lazy('client:dashboard')
+    form_class = EditUserForm
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
 
 
 
