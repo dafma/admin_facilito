@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import LoginForm, CreateUSerForm, EditUserForm
+from .forms import LoginForm, CreateUSerForm, EditUserForm, EditPasswordForm
 from django.contrib.auth import authenticate, login as login_django
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
@@ -118,5 +118,14 @@ def create(request):
         'form':form
     }
     return render(request, 'create.html', context)
+
+
+
+def edit_password(request):
+    form = EditPasswordForm(request.POST or None)
+    if form.is_valid():
+        print("formulario valido")
+    context = {'form': form}
+    return render(request, 'edit_password.html', context)
 
 

@@ -2,6 +2,14 @@ from django import forms
 from django.contrib.auth.models import User
 
 """
+functions
+"""
+def must_be_gt(value_password):
+    if len(value_password) < 5:
+        raise forms.ValidationError("El password debe de contener por lo menos 5 caracteres, desde una func")
+
+
+"""
 constant"""
 ERROR_MESSAGE_USER =  {'required': 'El username es requerido',
                                                 'unique': 'El username ya se encuentra registrado',
@@ -16,7 +24,7 @@ class LoginForm(forms.Form):
 
 class CreateUSerForm(forms.ModelForm):
     username = forms.CharField(max_length=20,error_messages= ERROR_MESSAGE_USER)
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput(),error_messages=ERROR_MESSAGE_PASSWORD)
+    password = forms.CharField(max_length=20, widget=forms.PasswordInput(),error_messages=ERROR_MESSAGE_PASSWORD, validators=[must_be_gt])
     email = forms.CharField(error_messages=ERROR_MESSAGE_EMAIL)
     class Meta:
         model = User
@@ -25,8 +33,22 @@ class CreateUSerForm(forms.ModelForm):
 
 class EditUserForm(forms.ModelForm):
     username = forms.CharField(max_length=20,error_messages=ERROR_MESSAGE_USER)
-    password = forms.CharField(max_length=20, widget=forms.PasswordInput(),error_messages=ERROR_MESSAGE_PASSWORD)
 
     class Meta:
         model = User
         fields = ('username', 'email', 'first_name', 'last_name')
+
+class EditPasswordForm(forms.Form):
+    password = forms.CharField(max_length=20, widget=forms.PasswordInput(), error_messages=ERROR_MESSAGE_PASSWORD)
+    new_password = forms.CharField(max_length=20, widget=forms.PasswordInput(), error_messages=ERROR_MESSAGE_PASSWORD)
+    repeat_password = forms.CharField(max_length=20, widget=forms.PasswordInput(), error_messages=ERROR_MESSAGE_PASSWORD)
+
+    # validacion de mayor de 5 caracteres
+    def clean_new_password(self):
+        value_password = self.cleaned_data['new_password']
+        if len(value_password) < 5:
+            raise forms.ValidationError('El password debe de contener por lo menos 5 caracteres')
+        value_password
+
+
+
