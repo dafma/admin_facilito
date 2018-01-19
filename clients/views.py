@@ -5,7 +5,7 @@ from django.views.generic import View, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginForm, CreateUSerForm, EditUserForm, EditPasswordForm
-from django.contrib.auth import authenticate, login as login_django
+from django.contrib.auth import authenticate, login as login_django, update_session_auth_hash
 from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -122,10 +122,19 @@ def create(request):
 
 
 def edit_password(request):
+    message = None
     form = EditPasswordForm(request.POST or None)
-    if form.is_valid():
-        print("formulario valido")
-    context = {'form': form}
+    if request.method == 'POST':
+        if form.is_valid():
+            current_password = form.cleaned_data['password']
+            new_password = form.cleaned_data['new_password']
+            if authenticate(username = request.user.username, password = current_password):
+                request.user.set_password(new_password)
+                request.user.save()
+                update_session_auth_hash(request, request.user)
+                message = "password actualizado"
+
+    context = {'form': form, 'message':message}
     return render(request, 'edit_password.html', context)
 
 

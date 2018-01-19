@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 """
-functions
+validacion por functions
 """
 def must_be_gt(value_password):
     if len(value_password) < 5:
@@ -43,12 +43,16 @@ class EditPasswordForm(forms.Form):
     new_password = forms.CharField(max_length=20, widget=forms.PasswordInput(), error_messages=ERROR_MESSAGE_PASSWORD)
     repeat_password = forms.CharField(max_length=20, widget=forms.PasswordInput(), error_messages=ERROR_MESSAGE_PASSWORD)
 
-    # validacion de mayor de 5 caracteres
-    def clean_new_password(self):
-        value_password = self.cleaned_data['new_password']
-        if len(value_password) < 5:
-            raise forms.ValidationError('El password debe de contener por lo menos 5 caracteres')
-        value_password
+    # validacion los passwords no son los mismos
+    def clean(self):
+        clean_data = super(EditPasswordForm, self).clean()
+        password1 = clean_data['new_password']
+        password2 = clean_data['repeat_password']
+
+        if password1 != password2:
+            raise forms.ValidationError('los passwords no son los mismos')
+
+
 
 
 
