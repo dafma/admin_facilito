@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -10,6 +11,7 @@ from django.contrib.auth import logout as logout_django
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 class ShowView(DetailView):
     model = User
@@ -18,14 +20,19 @@ class ShowView(DetailView):
     slug_url_kwarg = 'username_url' # que de la url
 
 
-class EditView(UpdateView):
+class EditView(UpdateView, LoginRequiredMixin, SuccessMessageMixin):
     model = User
     template_name = 'edit.html'
     success_url = reverse_lazy('client:dashboard')
     form_class = EditUserForm
+    success_message = 'Tu usuario ha sido actualizado'
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def form_valid(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(EditView, self).form_invalid(request, *args, **kwargs)
 
 
 class LoginView(View):
@@ -84,7 +91,7 @@ def create(request):
     return render(request, 'create.html', context)
 
 def edit_password(request):
-    message = None
+
     form = EditPasswordForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -94,9 +101,11 @@ def edit_password(request):
                 request.user.set_password(new_password)
                 request.user.save()
                 update_session_auth_hash(request, request.user)
-                message = "password actualizado"
+                messages.success(request, "El password actualizado, messages")
+            else:
+                messages.error(request, 'No es posible actualizarlo')
 
-    context = {'form': form, 'message':message}
+    context = {'form': form}
     return render(request, 'edit_password.html', context)
 
 def login(request):
