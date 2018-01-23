@@ -1,15 +1,14 @@
-
-{% if messages %}
-    <ul>
-        {% for message in messages %}
-         <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="ingreso">
-</form>
+{% extends 'bases/edit_base.html' %}
+{% block title %}
+Edit usuario
+{% endblock %}
+{% block subtitle %}
+Editar Usuario
+{% endblock %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Actualizar">
+    </form>
+{% endblock %}
