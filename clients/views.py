@@ -53,7 +53,7 @@ class LoginView(View):
             login_django(request, user)
             return redirect('client:dashboard')
         else:
-            self.message = "Usernam o password incorrecto"
+            self.message = "Username o password incorrecto"
         return render(request, self.template, self.get_context())
 
     def get_context(self):
