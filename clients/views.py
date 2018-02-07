@@ -15,14 +15,14 @@ from django.contrib import messages
 
 class ShowView(DetailView):
     model = User
-    template_name = 'show.html'
+    template_name = 'clients/show.html'
     slug_field = 'username' # que campo de la base de datos
     slug_url_kwarg = 'username_url' # que de la url
 
 
 class EditView(UpdateView, LoginRequiredMixin, SuccessMessageMixin):
     model = User
-    template_name = 'edit.html'
+    template_name = 'clients/edit.html'
     success_url = reverse_lazy('client:dashboard')
     form_class = EditUserForm
     success_message = 'Tu usuario ha sido actualizado'
@@ -38,7 +38,7 @@ class EditView(UpdateView, LoginRequiredMixin, SuccessMessageMixin):
 class LoginView(View):
     form = LoginUserForm()
     message = None
-    template = 'login.html'
+    template = 'clients/login.html'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -63,11 +63,11 @@ class DashboardView(LoginRequiredMixin, View):
     login_url = 'client:login'
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dashboard.html', {})
+        return render(request, 'clients/dashboard.html', {})
 
 class CreateUserr(CreateView):
     success_url = reverse_lazy('client:login')
-    template_name = 'create.html'
+    template_name = 'clients/create.html'
     model = User
     form_class = CreateUSerForm
 
@@ -88,7 +88,7 @@ def create(request):
     context = {
         'form':form
     }
-    return render(request, 'create.html', context)
+    return render(request, 'clients/create.html', context)
 
 def edit_password(request):
 
@@ -106,7 +106,7 @@ def edit_password(request):
                 messages.error(request, 'No es posible actualizarlo')
 
     context = {'form': form}
-    return render(request, 'edit_password.html', context)
+    return render(request, 'clients/edit_password.html', context)
 
 def login(request):
 
@@ -128,14 +128,14 @@ def login(request):
         'form': form,
         'message': message
     }
-    return render(request, 'login.html', context)
+    return render(request, 'clients/login.html', context)
 
 @login_required( login_url= 'client:login' )
 def dashboard(request):
     context = {
 
     }
-    return render(request, 'dashboard.html', context)
+    return render(request, 'clients/dashboard.html', context)
 
 @login_required( login_url= 'client:login' )
 def logout(request):

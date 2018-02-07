@@ -4,4 +4,4 @@ def home(request):
     return render(request, 'home.html')
 
 def error_404(request):
-    return render(request, "error_404.html", {})
+    return render(request, "clients/error_404.html", {})

@@ -30,9 +30,20 @@ Admin facilito
 {% endblock %}
 
 {% block content %}
-<!-- aqui los proyectos recientes -->
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="ingreso">
+</form>
+
+<a href="{% url "client:create" %}">Registrate</a>
+    <a href="#">Olvidaste tu contraseña</a>
+
 {% endblock %}
 
 {% block footer %}
 
 {% endblock %}
+
+
+

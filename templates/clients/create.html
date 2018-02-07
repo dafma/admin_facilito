@@ -22,7 +22,7 @@
  {% endcomment %}
 
 {% block title %}
-Admin facilito
+Crear nuevo usuario
 {% endblock %}
 
 {% block scripts %}
@@ -30,9 +30,16 @@ Admin facilito
 {% endblock %}
 
 {% block content %}
-<!-- aqui los proyectos recientes -->
+<h3>Registro</h3>
+<form action="" method = "post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="crea">
 {% endblock %}
 
 {% block footer %}
-
+<footer>
+<p>Ya cuento con una <a href="{% url 'client:login' %}">cuenta</a> </p>
+</footer>
 {% endblock %}
+
