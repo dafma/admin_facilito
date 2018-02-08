@@ -26,19 +26,21 @@ Admin facilito
 {% endblock %}
 
 {% block scripts %}
+    {% load staticfiles %}
  <!-- aqui colocaremos los scripts -->
+    <link rel="stylesheet" href="{% static 'css/forms.css'  %}">
 {% endblock %}
 
 {% block content %}
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="ingreso">
-</form>
-
-<a href="{% url "client:create" %}">Registrate</a>
-    <a href="#">Olvidaste tu contraseña</a>
-
+    <div class="class_container_form">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="ingreso">
+        </form>
+        <a href="{% url "client:create" %}">Registrate</a>
+        <a href="#">Olvidaste tu contraseña</a>
+    </div>
 {% endblock %}
 
 {% block footer %}
