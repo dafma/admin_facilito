@@ -35,6 +35,12 @@ class CreateUSerForm(forms.ModelForm):
         model = User
         fields = ('username', 'password', 'email')
 
+    def __init__(self, *args, **kwargs):
+        super(CreateUSerForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'id': 'username_create'})
+        self.fields['password'].widget.attrs.update({'id':'password_create'})
+        self.fields['email'].widget.attrs.update({'id':'email_create'})
+
 
 class EditUserForm(forms.ModelForm):
     username = forms.CharField(max_length=20,error_messages=ERROR_MESSAGE_USER)
